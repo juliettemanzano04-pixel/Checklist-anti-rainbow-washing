@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Anti rainbow washing Interactivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados para el scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Checkbox personalizado */
+        .checkbox-container input:checked ~ .checkmark {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #059669;
+        }
+        .checkbox-container input:checked ~ .checkmark::after {
+            display: block;
+        }
+        .checkmark::after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="relative w-full max-w-[1280px] h-auto lg:h-[720px] bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col justify-between p-6 md:p-10">
+        
+        <div class="absolute top-0 left-0 w-full h-[6px] bg-gradient-to-r from-[#FF0018] via-[#FFA52C] to-[#86007D] via-[#FFFF41] via-[#008018] via-[#0000F9]"></div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Filtro de Calidad Ética</span>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight mt-1">Checklist de Control Anti-Rainbow Washing</h1>
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center gap-4 w-full md:w-auto">
+                <div class="relative flex items-center justify-center">
+                    <svg class="w-14 h-14 transform -rotate-90">
+                        <circle cx="28" cy="28" r="24" class="stroke-slate-200 fill-none" stroke-width="4"></circle>
+                        <circle cx="28" cy="28" r="24" id="progress-circle" class="stroke-emerald-500 fill-none transition-all duration-300" stroke-width="4" stroke-dasharray="150" stroke-dashoffset="150"></circle>
+                    </svg>
+                    <span id="score-text" class="absolute text-sm font-black text-slate-700">0/12</span>
+                </div>
+                <div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Aprobación</div>
+                    <div id="status-badge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full mt-0.5 bg-rose-50 text-rose-600">
+                        Riesgo Crítico
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-grow overflow-y-auto custom-scrollbar pr-2 mb-4">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="text-slate-400 uppercase text-[11px] tracking-wider border-b border-slate-100 text-left">
+                        <th class="py-2.5 pl-4 w-12 text-center">#</th>
+                        <th class="py-2.5">Pregunta de Evaluación</th>
+                        <th class="py-2.5 text-center w-24">Cumple</th>
+                        <th class="py-2.5 pl-4 w-60 hidden md:table-cell">Nota de Enfoque</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">1</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Impacto real:</strong> ¿La campaña genera un beneficio concreto para el colectivo LGBTIQ+ o es solo imagen?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Donaciones, empleo directo, soporte a ONGs.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">2</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Posicionamiento claro:</strong> ¿La marca tiene un mensaje definido y coherente sobre diversidad?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Evitar discursos vagos o contradictorios.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">3</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Consistencia global:</strong> ¿El discurso se mantiene igual en todos los mercados donde se lanza?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">No silenciar en países con leyes restrictivas.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">4</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Voz del colectivo:</strong> ¿Las personas que lideran el mensaje pertenecen al colectivo?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Casting real y representativo de portavoces.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">5</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Más que “Love is Love”:</strong> ¿Se habla de la realidad del colectivo aunque sea incómoda?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Abordar discriminación, acoso o violencia.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">6</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Reconocimiento histórico:</strong> ¿Se menciona el contexto político y la historia del Pride?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">El Orgullo nace de una revuelta política (Stonewall).</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">7</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Intención de apoyo:</strong> ¿Busca generar cambio real o solo viralidad?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Evitar el oportunismo publicitario estacional.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">8</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Contenido con sentido:</strong> ¿Se transmite un mensaje relevante o solo clickbait visual?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Aportar valor informativo a la audiencia.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">9</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Inclusión amplia:</strong> ¿Se refleja la diversidad interna del colectivo?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Interseccionalidad (etnia, edad, identidades trans).</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">10</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Símbolos correctos:</strong> ¿Las banderas, colores y siglas están bien usados y respetan significados?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Evitar degradados estéticos o errores técnicos.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">11</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Apoyo continuo:</strong> ¿La marca respalda al colectivo durante todo el año o solo en junio?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Desestacionalizar el compromiso corporativo.</td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/60 transition-colors duration-150 cursor-pointer" onclick="toggleRow(this)">
+                        <td class="py-2.5 pl-4 text-center font-bold text-slate-300">12</td>
+                        <td class="py-2.5 font-medium text-slate-700">
+                            <strong>Protección interna:</strong> ¿Los trabajadores LGBTIQ+ de la marca tienen políticas que los protegen?
+                        </td>
+                        <td class="py-2.5 text-center" onclick="event.stopPropagation();">
+                            <label class="checkbox-container relative inline-block w-6 h-6 cursor-pointer select-none">
+                                <input type="checkbox" class="checklist-item hidden" onchange="updateEvaluator()">
+                                <span class="checkmark absolute top-0 left-0 w-6 h-6 bg-slate-100 border-2 border-slate-300 rounded-lg transition-all duration-200"></span>
+                            </label>
+                        </td>
+                        <td class="py-2.5 pl-4 text-xs text-slate-400 italic hidden md:table-cell">Planes de igualdad, protocolos DEI activos.</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="alert-banner" class="rounded-2xl p-4 transition-all duration-300 flex items-start gap-3 bg-rose-50 border-l-4 border-rose-500">
+            <span class="text-xl mt-0.5" id="alert-icon">⚠️</span>
+            <div class="text-xs md:text-sm leading-relaxed" id="alert-text">
+                <strong class="text-slate-800">Alerta Estratégica:</strong> Para mitigar el riesgo de rainbow washing, la campaña debe superar el test mínimo. Actualmente cuenta con una aprobación insuficiente. Reevalúe el compromiso ético de la propuesta.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Permite marcar haciendo click en la fila completa
+        function toggleRow(row) {
+            const checkbox = row.querySelector('.checklist-item');
+            checkbox.checked = !checkbox.checked;
+            updateEvaluator();
+        }
+
+        function updateEvaluator() {
+            const items = document.querySelectorAll('.checklist-item');
+            const checkedCount = Array.from(items).filter(item => item.checked).length;
+            const total = items.length;
+
+            // Actualizar texto numérico del marcador
+            document.getElementById('score-text').innerText = `${checkedCount}/${total}`;
+
+            // Actualizar círculo de progreso (SVG strokeDashoffset)
+            const circumference = 150;
+            const offset = circumference - (checkedCount / total) * circumference;
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+
+            // Actualizar Estado, Badge y Banner según puntuación
+            const statusBadge = document.getElementById('status-badge');
+            const alertBanner = document.getElementById('alert-banner');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertText = document.getElementById('alert-text');
+
+            if (checkedCount === total) {
+                statusBadge.innerText = "Aprobado Excelencia";
+                statusBadge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full mt-0.5 bg-emerald-100 text-emerald-700";
+                
+                alertBanner.className = "rounded-2xl p-4 transition-all duration-300 flex items-start gap-3 bg-emerald-50 border-l-4 border-emerald-500";
+                alertIcon.innerText = "🎉";
+                alertText.innerHTML = `<strong class="text-emerald-800">Campaña Auténtica y Segura:</strong> La propuesta cumple con el 100% de los estándares de protección, representación e impacto real de la marca. Adelante con el lanzamiento.`;
+            } else if (checkedCount >= 9) {
+                statusBadge.innerText = "Zona de Seguridad";
+                statusBadge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full mt-0.5 bg-sky-100 text-sky-700";
+                
+                alertBanner.className = "rounded-2xl p-4 transition-all duration-300 flex items-start gap-3 bg-sky-50 border-l-4 border-sky-500";
+                alertIcon.innerText = "✓";
+                alertText.innerHTML = `<strong class="text-sky-800">Campaña Segura:</strong> Nivel óptimo de conformidad. El proyecto cuenta con una base sólida de coherencia comunicativa y responsabilidad corporativa.`;
+            } else if (checkedCount >= 6) {
+                statusBadge.innerText = "Zona de Revisión";
+                statusBadge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full mt-0.5 bg-amber-100 text-amber-700";
+                
+                alertBanner.className = "rounded-2xl p-4 transition-all duration-300 flex items-start gap-3 bg-amber-50 border-l-4 border-amber-500";
+                alertIcon.innerText = "⚡";
+                alertText.innerHTML = `<strong class="text-amber-800">Revisión Recomendada:</strong> Existen contradicciones o superficialidad en algunos apartados de la campaña. Se aconseja reforzar el impacto social o la visibilidad continua antes de su difusión comercial.`;
+            } else {
+                statusBadge.innerText = "Riesgo Crítico";
+                statusBadge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full mt-0.5 bg-rose-100 text-rose-700";
+                
+                alertBanner.className = "rounded-2xl p-4 transition-all duration-300 flex items-start gap-3 bg-rose-50 border-l-4 border-rose-500";
+                alertIcon.innerText = "⚠️";
+                alertText.innerHTML = `<strong class="text-slate-800">Riesgo Alto de rainbow washing:</strong> Si la respuesta es negativa en tantos apartados, la campaña corre un peligro inminente de ser tachada de oportunista y superficial. Reevalúe el concepto.`;
+            }
+        }
+
+        // Inicializar
+        window.onload = function() {
+            updateEvaluator();
+        }
+    </script>
+</body>
+</html>
